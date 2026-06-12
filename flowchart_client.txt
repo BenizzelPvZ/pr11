@@ -1,0 +1,36 @@
+flowchart TD
+    A[Client startet] --> B[Prüfe Parameter]
+    B -->|Fehler| C[Fehlermeldung: Aufruf anzeigen]
+    C --> D[Beenden]
+    B -->|OK| E[Öffne Quelldatei]
+    E -->|Fehler| F[Fehlermeldung: Datei nicht lesbar]
+    F --> D
+    E -->|OK| G[Bestimme Dateigröße]
+    G -->|Fehler| H[Fehlermeldung: lseek fehlgeschlagen]
+    H --> D
+    G -->|OK| I[Verbinde mit Server-Socket: /tmp/mysocket]
+    I -->|Fehler| J[Fehlermeldung: Verbindung fehlgeschlagen]
+    J --> D
+    I -->|OK| K[Sende FILENAME]
+    K --> L[Warte auf Server-Antwort]
+    L -->|NAK/ERROR| M[Fehlermeldung: Server lehnt ab]
+    M --> D
+    L -->|ACK| N[Sende FILESIZE]
+    N --> O[Warte auf ACK]
+    O -->|NAK/ERROR| P[Fehlermeldung: Server lehnt ab]
+    P --> D
+    O -->|ACK| Q[Lese Datenblock aus Quelldatei]
+    Q --> R[Sende FILEDATA]
+    R --> S[Sende Datenblock]
+    S --> T[Warte auf ACK]
+    T -->|ERROR| U[Fehlermeldung: Server-Fehler]
+    U --> D
+    T -->|ACK| V[Fortschritt aktualisieren]
+    V --> W{Alle Daten gesendet?}
+    W -->|Nein| Q
+    W -->|Ja| X[Sende DONE]
+    X --> Y[Warte auf finale ACK]
+    Y -->|ERROR| Z[Fehlermeldung: Server-Fehler]
+    Z --> D
+    Y -->|ACK| AA[Erfolgsmeldung: Datei kopiert!]
+    AA --> D

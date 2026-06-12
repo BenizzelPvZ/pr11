@@ -1,0 +1,32 @@
+flowchart TD
+    A[Server startet] --> B[Socket erstellen: /tmp/mysocket]
+    B --> C[Socket binden und auf Verbindungen warten]
+    C --> D[Client verbindet sich]
+    D --> E[handle_client aufrufen]
+    
+    E --> F[Warte auf FILENAME-Nachricht]
+    F -->|FILENAME| G{Prüfe, ob Datei bereits existiert}
+    G -->|Datei existiert| H[Sende NAK: Datei existiert bereits]
+    H --> I[Verbindung schließen]
+    G -->|Datei existiert nicht| J[Sende ACK]
+    
+    J --> K[Warte auf FILESIZE-Nachricht]
+    K -->|FILESIZE| L{Prüfe Dateigröße}
+    L -->|Ungültige Größe| M[Sende ERROR: Ungültige Dateigröße]
+    M --> I
+    L -->|Gültige Größe| N[Sende ACK]
+    
+    N --> O{Öffne Zieldatei zum Schreiben}
+    O -->|Fehler| P[Sende ERROR: Kann Zieldatei nicht erstellen]
+    P --> I
+    O -->|Erfolg| Q{Warte auf FILEDATA oder DONE}
+    
+    Q -->|FILEDATA| R[Empfange Datenblock]
+    R --> S[Schreibe Daten in Datei]
+    S --> T[Sende ACK]
+    T --> Q
+    
+    Q -->|DONE| U[Alle Daten empfangen]
+    U --> V[Sende ACK]
+    V --> W[Datei erfolgreich geschrieben]
+    W --> I
