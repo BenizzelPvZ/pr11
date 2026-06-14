@@ -1,13 +1,3 @@
-/**
- * Iterativer Dateikopier-Server für Unix-Domain-Sockets
- * 
- * Verwendet Socket: /tmp/mysocket
- * Protokoll: Siehe PROTOKOLL.md
- * 
- * Compilieren: gcc server.c -o server
- * Ausführen: ./server
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

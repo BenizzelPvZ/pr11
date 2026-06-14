@@ -1,14 +1,3 @@
-/**
- * Dateikopier-Client für Unix-Domain-Sockets
- * 
- * Verwendet Socket: /tmp/mysocket
- * Protokoll: Siehe PROTOKOLL.md
- * 
- * Aufruf: ./client <Quelldatei> <Zieldatei>
- * 
- * Beispiel: ./client /home/user/test.txt /tmp/copy.txt
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
