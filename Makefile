@@ -1,7 +1,7 @@
 # Makefile für Dateikopier-Client/Server
 
 CC = gcc
-CFLAGS = -Wall -Wextra
+CFLAGS = -Wall -Wextra -g
 
 all: server client
 

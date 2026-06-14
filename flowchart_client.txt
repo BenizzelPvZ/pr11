@@ -11,7 +11,10 @@ flowchart TD
     G -->|OK| I[Verbinde mit Server-Socket: /tmp/mysocket]
     I -->|Fehler| J[Fehlermeldung: Verbindung fehlgeschlagen]
     J --> D
-    I -->|OK| K[Sende FILENAME]
+    I -->|OK| AB[Löse Pfad für FILENAME auf]
+    AB -->|Fehler| AC[Fehlermeldung: getcwd fehlgeschlagen]
+    AC --> D
+    AB -->|OK| K[Sende FILENAME]
     K --> L[Warte auf Server-Antwort]
     L -->|NAK/ERROR| M[Fehlermeldung: Server lehnt ab]
     M --> D

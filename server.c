@@ -209,7 +209,8 @@ void handle_client(int conn_socket) {
     }
     
     if (strncmp(msg_buffer, "FILENAME:", 9) != 0) {
-        snprintf(error_msg, MAX_MSG_SIZE, "ERROR:Erwartet FILENAME, erhalten: %.*s\n", (int)MAX_MSG_SIZE-37, msg_buffer); // -37 wegen "ERROR:Erwartet FILENAME, erhalten: \n" Länge sonst warning
+        snprintf(error_msg, MAX_MSG_SIZE, "ERROR:Erwartet FILENAME, erhalten: %.*s\n", 
+            (int)MAX_MSG_SIZE-(int)sizeof("ERROR:Erwartet FILENAME, erhalten: \n"), msg_buffer);
         send_message(conn_socket, error_msg);
         goto cleanup;
     }
@@ -251,7 +252,8 @@ void handle_client(int conn_socket) {
         goto cleanup;
     }
     if (strncmp(msg_buffer, "FILESIZE:", 9) != 0) {
-        snprintf(error_msg, MAX_MSG_SIZE, "ERROR:Erwartet FILESIZE, erhalten: %.*s\n", (int)MAX_MSG_SIZE-37, msg_buffer); // -37 wegen "ERROR:Ungültige Dateigröße\n" Länge sonst warning
+        snprintf(error_msg, MAX_MSG_SIZE, "ERROR:Erwartet FILESIZE, erhalten: %.*s\n", 
+            (int)MAX_MSG_SIZE-(int)sizeof("ERROR:Erwartet FILESIZE, erhalten: \n"), msg_buffer);
         send_message(conn_socket, error_msg);
         goto cleanup;
     }

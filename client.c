@@ -19,6 +19,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <limits.h>
 #include "common.h"
 
 int send_message(int sock, const char *message);
@@ -39,7 +40,20 @@ int main(int argc, char *argv[]) {
     }
     
     const char *source_filename = argv[1];
-    const char *target_filename = argv[2];
+    char target_filename[PATH_MAX];
+    memset(target_filename,0,PATH_MAX);
+
+    if (argv[2][0] != '/') {
+      // Wenn es kein absoluter Pfad ist, holen wir das aktuelle Verzeichnis des Clients
+        if (getcwd(target_filename, PATH_MAX-1-1-strlen(argv[2])) == NULL){ //-1 fuer / und -laenge von argv[2] und -1 fuer \0
+            perror("getcwd");
+            exit(EXIT_FAILURE);
+        }; 
+        strcat(target_filename, "/");
+        strcat(target_filename, argv[2]);
+    } else {
+        strncpy(target_filename, argv[2], PATH_MAX);
+    }
     
     /* 1. Quelldatei prüfen */
     int source_fd = open(source_filename, O_RDONLY);
@@ -90,7 +104,7 @@ int main(int argc, char *argv[]) {
     printf("Verbunden mit Server\n");
     
     /* 3. Sende Zieldateinamen */
-    snprintf(buffer, MAX_MSG_SIZE, "FILENAME:%s\n", target_filename);
+    snprintf(buffer, MAX_MSG_SIZE, "FILENAME:%.*s\n", MAX_MSG_SIZE-(int)sizeof("FILENAME:\n"),target_filename);
     if (send_message(sock, buffer) != 0) {
         close(sock);
         close(source_fd);
