@@ -13,7 +13,7 @@
 
 int send_message(int sock, const char *message);
 int receive_message(int sock, char *buffer, size_t bufsize);
-int send_exact(int sock, unsigned const char *message, size_t length);
+int send_exact(int sock, const char *message, size_t length);
 int receive_exact(int sock, void *buf, size_t length);
 
 int main(int argc, char *argv[]) {
@@ -164,7 +164,7 @@ int main(int argc, char *argv[]) {
     }
     
     /* 7. Sende Datei in Blöcken */
-    unsigned char data_block[BLOCK_SIZE];
+    char data_block[BLOCK_SIZE];
     ssize_t bytes_read;
     off_t bytes_sent = 0;
     
@@ -318,7 +318,7 @@ int receive_message(int sock, char *buffer, size_t bufsize) {
 }
 
 /* Sendet genau 'length' Bytes */
-int send_exact(int sock, unsigned const char *message, size_t length) {
+int send_exact(int sock, const char *message, size_t length) {
     size_t sent_total = 0;
     
     while (sent_total < length) {
