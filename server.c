@@ -38,9 +38,6 @@ int main() {
         exit(EXIT_FAILURE);
     }
     
-    /* Altes Socket entfernen */
-    unlink(SOCKET_PATH);
-    
     /* Socket erstellen */
     server_socket = socket(AF_UNIX, SOCK_STREAM, 0);
     if (server_socket == -1) {
